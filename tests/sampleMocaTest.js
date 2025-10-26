@@ -1,4 +1,5 @@
-const expect = require("chai").expect;
+const { expect } = require("chai");
+const { describe, it } = require("mocha");
 
 // Sample JUnit test
 function sum(arr) {
@@ -10,11 +11,19 @@ function sum(arr) {
 }
 
 describe("#sum()", function () {
-	//  if needed logic before each test run
-	beforeEach(function () {});
-
-	// test a functionality
 	it("should add numbers", function () {
 		expect(sum([1, 2, 3, 4, 5])).to.equal(15);
+	});
+
+	it("should handle negative numbers", function () {
+		expect(sum([-5, 5, -10, 0])).to.equal(-10);
+	});
+
+	it("should return 0 for an empty array", function () {
+		expect(sum([])).to.equal(0);
+	});
+
+	it("should work with floating point numbers", function () {
+		expect(sum([0.1, 0.2, 0.3])).to.be.closeTo(0.6, 0.0001);
 	});
 });
