@@ -1,24 +1,20 @@
-const expect = require('chai').expect;
+const expect = require("chai").expect;
 
-//Sample JUnit test
+// Sample JUnit test
 function sum(arr) {
-    let res = 0;
-    for (let i = 0; i < arr.length; i++) {
-        res += arr[i];
-    }
-    return res;
+	let res = 0;
+	for (let i = 0; i < arr.length; i++) {
+		res += arr[i];
+	}
+	return res;
 }
 
-describe('#sum()', function () {
+describe("#sum()", function () {
+	//  if needed logic before each test run
+	beforeEach(function () {});
 
-    //  if needed logic before each test run
-    beforeEach(function () {
-
-    })
-
-    // test a functionality
-    it('should add numbers', function () {
-        expect(sum([1, 2, 3, 4, 5])).to.equal(15);
-    })
-
+	// test a functionality
+	it("should add numbers", function () {
+		expect(sum([1, 2, 3, 4, 5])).to.equal(15);
+	});
 });
