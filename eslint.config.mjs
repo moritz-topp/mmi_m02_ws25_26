@@ -1,52 +1,24 @@
-import eslintConfig from "@antfu/eslint-config";
-import prettier from "eslint-plugin-prettier";
-import eslintPluginPrettierRecommended from "eslint-plugin-prettier/recommended";
+import antfu from "@antfu/eslint-config"
 
-export default eslintConfig(
-	// General
+export default antfu(
 	{
+		formatters: true,
 		stylistic: {
 			indent: "tab",
-			quotes: "double"
+			quotes: "double",
 		},
-		rules: {
-			curly: "off",
-			"no-console": "off"
+		vue: {
+			overrides: {
+				"no-alert": "off",
+				"no-console": "off",
+				"vue/script-indent": ["error", "tab", {
+					baseIndent: 1,
+				}],
+				"style/indent": "off",
+				"vue/block-order": ["error", {
+					order: ["template", "script", "style"],
+				}],
+			},
 		},
-		formatters: {
-			css: true,
-			html: true
-		}
 	},
-	// Prettier (as ESLint rule)
-	eslintPluginPrettierRecommended,
-	{
-		plugins: { prettier },
-		rules: {
-			"prettier/prettier": [
-				"error",
-				{
-					bracketSpacing: true,
-					printWidth: 120,
-					singleQuote: false,
-					semi: true,
-					useTabs: true,
-					tabWidth: 4,
-					trailingComma: "none"
-				}
-			]
-		}
-	},
-	{
-		files: ["**/*.yml", "**/*.yaml"],
-		rules: {
-			"prettier/prettier": [
-				"error",
-				{
-					tabWidth: 2,
-					useTabs: false
-				}
-			]
-		}
-	}
-);
+)
