@@ -16,23 +16,23 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Run Tests for PRs
-  test:
+  # Run Tests and Linting
+  test_and_lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
 
-      - name: Set up Node.js
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+          run_install: false
+
+      - name: Install Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 22
-          cache: pnpm
-          cache-dependency-path: pnpm-lock.yaml
-
-      - name: Enable Corepack (pnpm@10)
-        run: |
-          corepack enable
-          corepack prepare pnpm@10 --activate
+          cache: 'pnpm'
 
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
@@ -43,23 +43,10 @@ jobs:
       - name: Test
         run: pnpm run test
 
-      - name: Login to GitHub Registry
-        uses: docker/login-action@v3
-        with:
-          registry: ghcr.io
-          username: $GITHUB_USER
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build Docker
-        uses: docker/build-push-action@v6
-        with:
-          context: .
-          file: Dockerfile
-          push: false
-          pull: true
-
   # Build the Docker Image
   build:
+    needs: test_and_lint
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
 
     steps:
@@ -83,6 +70,6 @@ jobs:
           push: true
           pull: true
           platforms: linux/amd64
-          tags: ghcr.io/${{ github.repository }}:${{ github.workflow }}
-          cache-from: type=registry,ref=ghcr.io/${{ github.repository }}:${{ github.workflow }}
+          tags: ghcr.io/${{ toLower(github.repository) }}:latest
+          cache-from: type=registry,ref=ghcr.io/${{ toLower(github.repository) }}:latest
           cache-to: type=inline
